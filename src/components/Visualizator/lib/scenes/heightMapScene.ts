@@ -83,7 +83,6 @@ export class HeightMapScene extends Phaser.Scene {
   }
 
   create(): void {
-    // console.log({textures_create: this.textures})
     let image: HTMLImageElement = new Image(),
       context: CanvasRenderingContext2D | null;
     if (this.imageBase64) {
@@ -97,7 +96,6 @@ export class HeightMapScene extends Phaser.Scene {
     function getPixel(x: number, y: number) {
       return context?.getImageData(x, y, 1, 1).data;
     }
-    // console.log({textures_constructor: this.textures})
 
     const gridDataRaw = new MapDataToGrid(this.mapDataJSON.results);
     // TODO: don't get flat grid, get grid, so you know how much cols & rows there are (and get tiles from image)
@@ -181,11 +179,6 @@ export class HeightMapScene extends Phaser.Scene {
         this.container.add(cube as Cube);
       }
     });
-
-    // TODO: use this to properly resize image
-    // FIXME: (but it could be bullshit)
-    console.log(`getBounds`, this.container.getBounds());
-    console.log({ cubeGroup: this.cubeGroup, container: this.container });
 
     this.input.on('pointermove', (o_pointer: Phaser.Input.Pointer) => {
       if (!o_pointer.primaryDown) {
