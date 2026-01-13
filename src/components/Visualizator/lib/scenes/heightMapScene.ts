@@ -83,7 +83,6 @@ export class HeightMapScene extends Phaser.Scene {
   }
 
   create(): void {
-    // console.log({textures_create: this.textures})
     let image: HTMLImageElement = new Image(),
       context: CanvasRenderingContext2D | null;
     if (this.imageBase64) {
@@ -97,20 +96,10 @@ export class HeightMapScene extends Phaser.Scene {
     function getPixel(x: number, y: number) {
       return context?.getImageData(x, y, 1, 1).data;
     }
-    // console.log({textures_constructor: this.textures})
 
     const gridDataRaw = new MapDataToGrid(this.mapDataJSON.results);
     // TODO: don't get flat grid, get grid, so you know how much cols & rows there are (and get tiles from image)
-    const gridData: IMapGridPoint[] = gridDataRaw.getFlatGrid();
-    const gridSize = gridDataRaw.getSize();
-    const { minHeight, maxHeight } = this.getMinMaxHeight(gridData);
-    this.minHeight = minHeight;
-    this.maxHeight = maxHeight;
-    const n = gridData.length;
-    let row: Cube[] = [];
-
-    // TEMP
-    const sortedGridData = gridData.sort((a, b) => {
+    const gridData: IMapGridPoint[] = gridDataRaw.getFlatGrid().sort((a, b) => {
       if (a.y < b.y) {
         return -1;
       } else if (a.y > b.y) {
@@ -120,30 +109,25 @@ export class HeightMapScene extends Phaser.Scene {
       }
     });
 
+    const gridSize = gridDataRaw.getSize();
+    const { minHeight, maxHeight } = this.getMinMaxHeight(gridData);
+    this.minHeight = minHeight;
+    this.maxHeight = maxHeight;
+    const n = gridData.length;
+    let row: Cube[] = [];
+
     // const container = this.add.container(this.centerX, this.centerY);
     // const container = this.add.container(0, 0);
     this.container = this.add.container(0, 0);
 
-    // TEMP
-    const imageWidth = image.width;
-    const imageHeight = image.height;
-    console.log({ imageWidth, imageHeight });
-
     for (let i = 0; i < n; i++) {
-      // const singleGridData = gridData[i];
-      const singleGridData = sortedGridData[i];
+      const singleGridData = gridData[i];
       const { x, y } = singleGridData;
       const depth = (this.width * 2) / 4;
       const halfDepth = depth / 2;
       const halfWidth = this.width / 2;
       const height = singleGridData.height;
       const t = (height - this.minHeight) / (this.maxHeight - this.minHeight);
-
-      // TEMP
-      // const cx = Phaser.Math.Wrap(x / gridSize.x, 0, imageWidth);
-      // const cy = Phaser.Math.Wrap(y / gridSize.y, 0, imageHeight);
-      const cx = Math.round((imageWidth * x) / gridSize.x);
-      const cy = Math.round((imageHeight * y) / gridSize.y);
       /*
      let color: Color;
       if (height === 0) {
@@ -153,14 +137,6 @@ export class HeightMapScene extends Phaser.Scene {
       }
       */
 
-      console.log({ cx, cy });
-      // FIXME
-      const imageData: Uint8ClampedArray | undefined = getPixel(cx, cy);
-      // const imageData: Uint8ClampedArray | undefined = getPixel(x, y);
-      const _color = imageData
-        ? new Color(imageData[0], imageData[1], imageData[2], imageData[3])
-        : new Color(0, 0, 0, 0);
-
       var tx = (x - y) * halfWidth * 0.6;
       var ty = (x + y) * halfDepth * 0.6;
 
@@ -168,10 +144,7 @@ export class HeightMapScene extends Phaser.Scene {
         new Phaser.Geom.Point(this.centerX + tx, this.centerY + ty),
         0,
         this.size,
-        // this.lowColor,
-        // color,
-        _color,
-        // new Color(255, 255, 255, 1),
+        this.lowColor,
         this
       );
 
@@ -207,11 +180,6 @@ export class HeightMapScene extends Phaser.Scene {
       }
     });
 
-    // TODO: use this to properly resize image
-    // FIXME: (but it could be bullshit)
-    console.log(`getBounds`, this.container.getBounds());
-    console.log({ cubeGroup: this.cubeGroup, container: this.container });
-
     this.input.on('pointermove', (o_pointer: Phaser.Input.Pointer) => {
       if (!o_pointer.primaryDown) {
         return;
@@ -227,9 +195,8 @@ export class HeightMapScene extends Phaser.Scene {
           o_pointer.position.y - this.lastPointerCoordinates.y;
       }
 
-      const {
-        tagName
-      }: { tagName: string } = o_pointer.manager.activePointer.downElement;
+      const { tagName }: { tagName: string } =
+        o_pointer.manager.activePointer.downElement;
 
       if (tagName.match(/^canvas$/i)) {
         this.lastPointerCoordinates.x = o_pointer.position.x;
@@ -248,12 +215,9 @@ export class HeightMapScene extends Phaser.Scene {
   }
 
   handleColorChange(lowColor: string, highColor: string) {
-    // FIXME
-    /*
     this.colorChanged = true;
     this.lowColor = Color.fromHexa(lowColor);
     this.highColor = Color.fromHexa(highColor);
-    */
   }
 
   updateCubeColor(
