@@ -122,14 +122,8 @@ export class HeightMapScene extends Phaser.Scene {
     // const container = this.add.container(0, 0);
     this.container = this.add.container(0, 0);
 
-    // TEMP
-    const imageWidth = image.width;
-    const imageHeight = image.height;
-    console.log({ imageWidth, imageHeight });
-
     for (let i = 0; i < n; i++) {
-      // const singleGridData = gridData[i];
-      const singleGridData = sortedGridData[i];
+      const singleGridData = gridData[i];
       const { x, y } = singleGridData;
       const depth = (this.width * 2) / 4;
       const halfDepth = depth / 2;
