@@ -160,10 +160,7 @@ export class HeightMapScene extends Phaser.Scene {
         new Phaser.Geom.Point(this.centerX + tx, this.centerY + ty),
         0,
         this.size,
-        // this.lowColor,
-        // color,
-        _color,
-        // new Color(255, 255, 255, 1),
+        this.lowColor,
         this
       );
 
@@ -240,12 +237,9 @@ export class HeightMapScene extends Phaser.Scene {
   }
 
   handleColorChange(lowColor: string, highColor: string) {
-    // FIXME
-    /*
     this.colorChanged = true;
     this.lowColor = Color.fromHexa(lowColor);
     this.highColor = Color.fromHexa(highColor);
-    */
   }
 
   updateCubeColor(
