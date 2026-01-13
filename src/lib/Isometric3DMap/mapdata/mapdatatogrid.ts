@@ -9,7 +9,7 @@ type ElevationPoint = {
 class MapDataToGrid {
   private width: number;
   private height: number;
-  private convertedDataFlat: any;
+  private convertedDataFlat: Array<{ x: number; y: number; height: number }>;
 
   /**
    * @param {JSON} data JSON data
