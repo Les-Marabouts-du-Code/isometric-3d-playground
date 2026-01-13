@@ -101,16 +101,7 @@ export class HeightMapScene extends Phaser.Scene {
 
     const gridDataRaw = new MapDataToGrid(this.mapDataJSON.results);
     // TODO: don't get flat grid, get grid, so you know how much cols & rows there are (and get tiles from image)
-    const gridData: IMapGridPoint[] = gridDataRaw.getFlatGrid();
-    const gridSize = gridDataRaw.getSize();
-    const { minHeight, maxHeight } = this.getMinMaxHeight(gridData);
-    this.minHeight = minHeight;
-    this.maxHeight = maxHeight;
-    const n = gridData.length;
-    let row: Cube[] = [];
-
-    // TEMP
-    const sortedGridData = gridData.sort((a, b) => {
+    const gridData: IMapGridPoint[] = gridDataRaw.getFlatGrid().sort((a, b) => {
       if (a.y < b.y) {
         return -1;
       } else if (a.y > b.y) {
@@ -119,6 +110,13 @@ export class HeightMapScene extends Phaser.Scene {
         return 0;
       }
     });
+
+    const gridSize = gridDataRaw.getSize();
+    const { minHeight, maxHeight } = this.getMinMaxHeight(gridData);
+    this.minHeight = minHeight;
+    this.maxHeight = maxHeight;
+    const n = gridData.length;
+    let row: Cube[] = [];
 
     // const container = this.add.container(this.centerX, this.centerY);
     // const container = this.add.container(0, 0);
