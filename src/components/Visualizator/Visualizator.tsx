@@ -29,13 +29,13 @@ const Visualizator = (props: IVisualizatorProps) => {
     height: 0
   });
 
-  /*
   const scene = new HeightMapScene({
     data: props.mapData,
+    imageBase64: props.imageData,
     lowColor: localLowColor,
     highColor: localHighColor
   });
-  */
+
   useEffect(() => {
     window.addEventListener('resize', handleResize);
 
@@ -52,13 +52,7 @@ const Visualizator = (props: IVisualizatorProps) => {
     setGame(
       new IsoGame({
         parent: vizualizatorEl,
-        // scene,
-        scene: new HeightMapScene({
-          data: props.mapData,
-          imageBase64: props.imageData,
-          lowColor: localLowColor,
-          highColor: localHighColor
-        }),
+        scene,
         scale: {
           parent: vizualizatorEl,
           mode: Phaser.Scale.NONE,
