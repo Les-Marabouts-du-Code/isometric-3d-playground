@@ -130,12 +130,6 @@ export class HeightMapScene extends Phaser.Scene {
       const halfWidth = this.width / 2;
       const height = singleGridData.height;
       const t = (height - this.minHeight) / (this.maxHeight - this.minHeight);
-
-      // TEMP
-      // const cx = Phaser.Math.Wrap(x / gridSize.x, 0, imageWidth);
-      // const cy = Phaser.Math.Wrap(y / gridSize.y, 0, imageHeight);
-      const cx = Math.round((imageWidth * x) / gridSize.x);
-      const cy = Math.round((imageHeight * y) / gridSize.y);
       /*
      let color: Color;
       if (height === 0) {
@@ -144,14 +138,6 @@ export class HeightMapScene extends Phaser.Scene {
         color = this.lowColor.lerpTo(this.highColor, t);
       }
       */
-
-      console.log({ cx, cy });
-      // FIXME
-      const imageData: Uint8ClampedArray | undefined = getPixel(cx, cy);
-      // const imageData: Uint8ClampedArray | undefined = getPixel(x, y);
-      const _color = imageData
-        ? new Color(imageData[0], imageData[1], imageData[2], imageData[3])
-        : new Color(0, 0, 0, 0);
 
       var tx = (x - y) * halfWidth * 0.6;
       var ty = (x + y) * halfDepth * 0.6;
