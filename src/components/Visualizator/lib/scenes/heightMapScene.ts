@@ -195,9 +195,8 @@ export class HeightMapScene extends Phaser.Scene {
           o_pointer.position.y - this.lastPointerCoordinates.y;
       }
 
-      const {
-        tagName
-      }: { tagName: string } = o_pointer.manager.activePointer.downElement;
+      const { tagName }: { tagName: string } =
+        o_pointer.manager.activePointer.downElement;
 
       if (tagName.match(/^canvas$/i)) {
         this.lastPointerCoordinates.x = o_pointer.position.x;

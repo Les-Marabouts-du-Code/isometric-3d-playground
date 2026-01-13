@@ -23,9 +23,9 @@ const Visualizator = (props: IVisualizatorProps) => {
   const [game, setGame] = useState<IsoGame>();
   // FIXME
   const [gameContainerBounds, setGameContainerBounds] = useState<any>({
-    x: 0, 
-    y: 0, 
-    width: 0, 
+    x: 0,
+    y: 0,
+    width: 0,
     height: 0
   });
 
@@ -77,8 +77,8 @@ const Visualizator = (props: IVisualizatorProps) => {
   }, [width, height, game]);
 
   useEffect(() => {
-    if(game && game.getContainerBounds()) {
-      setGameContainerBounds(game.getContainerBounds())
+    if (game && game.getContainerBounds()) {
+      setGameContainerBounds(game.getContainerBounds());
     }
   }, [game]);
 
@@ -90,21 +90,30 @@ const Visualizator = (props: IVisualizatorProps) => {
 
   return (
     <>
-      <div style={{
-        position: 'absolute', 
-        background: 'white', 
-        width: '300px', 
-        height: '100px', 
-        fontSize: '10px', 
-        padding: '10px'
-      }}>{JSON.stringify(gameContainerBounds)}</div>
+      <div
+        style={{
+          position: 'absolute',
+          background: 'white',
+          width: '300px',
+          height: '100px',
+          fontSize: '10px',
+          padding: '10px'
+        }}
+      >
+        {JSON.stringify(gameContainerBounds)}
+      </div>
       {/* TEMP */}
-      {props.imageData && game !== null && <img style={{
-        position: 'absolute', 
-        top: 0,
-        right: 0,
-        width: 200,
-      }} src={props.imageData} />}
+      {props.imageData && game !== null && (
+        <img
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: 200
+          }}
+          src={props.imageData}
+        />
+      )}
       {/* {props.imageData && game !== null && (
         <img
           style={{

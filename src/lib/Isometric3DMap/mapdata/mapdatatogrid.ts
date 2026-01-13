@@ -65,9 +65,9 @@ class MapDataToGrid {
 
   getSize() {
     return {
-      x: this.width, 
+      x: this.width,
       y: this.height
-    }
+    };
   }
 
   /**
