@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+const LOW_COLOR_KEY = 'isp_lowColor';
+const HIGH_COLOR_KEY = 'isp_highColor';
+
 type UseMapColorsProps = {
   defaultLowColor: string;
   defaultHighColor: string;
@@ -16,18 +19,18 @@ export function useMapColors(
   props: UseMapColorsProps
 ): UseMapColorsReturnProps {
   const [lowColor, setLowColor] = useState<string>(
-    localStorage.getItem('isp_lowColor') ?? props.defaultLowColor
+    localStorage.getItem(LOW_COLOR_KEY) ?? props.defaultLowColor
   );
   const [highColor, setHighColor] = useState<string>(
-    localStorage.getItem('isp_highColor') ?? props.defaultHighColor
+    localStorage.getItem(HIGH_COLOR_KEY) ?? props.defaultHighColor
   );
 
   useEffect(() => {
-    localStorage.setItem('isp_lowColor', lowColor);
+    localStorage.setItem(LOW_COLOR_KEY, lowColor);
   }, [lowColor]);
 
   useEffect(() => {
-    localStorage.setItem('isp_highColor', highColor);
+    localStorage.setItem(HIGH_COLOR_KEY, highColor);
   }, [highColor]);
 
   return {
