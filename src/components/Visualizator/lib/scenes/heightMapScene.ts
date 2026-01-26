@@ -128,14 +128,13 @@ export class HeightMapScene extends Phaser.Scene {
       const halfWidth = this.width / 2;
       const height = singleGridData.height;
       const t = (height - this.minHeight) / (this.maxHeight - this.minHeight);
-      /*
-     let color: Color;
+
+      let color: Color;
       if (height === 0) {
         color = this.waterColor;
       } else {
         color = this.lowColor.lerpTo(this.highColor, t);
       }
-      */
 
       var tx = (x - y) * halfWidth * 0.6;
       var ty = (x + y) * halfDepth * 0.6;
@@ -144,7 +143,7 @@ export class HeightMapScene extends Phaser.Scene {
         new Phaser.Geom.Point(this.centerX + tx, this.centerY + ty),
         0,
         this.size,
-        this.lowColor,
+        color,
         this
       );
 
@@ -167,7 +166,7 @@ export class HeightMapScene extends Phaser.Scene {
         delay: reverseIndex * 2,
         onUpdate: (args) => {
           const animationProgress = args.elapsed / args.duration;
-          // this.updateCubeColor(cube, this.lowColor, color, animationProgress);
+          this.updateCubeColor(cube, this.lowColor, color, animationProgress);
         }
       });
     }

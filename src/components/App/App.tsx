@@ -113,9 +113,7 @@ const IfVisualizator = (props: { data?: JSON }) => {
   console.log({ imageData, dataToRender });
 
   if (dataToRender) {
-    return (
-      <Visualizator mapData={dataToRender} imageData={imageData}></Visualizator>
-    );
+    return <Visualizator mapData={dataToRender} imageData={imageData} />;
   } else {
     return null;
   }
