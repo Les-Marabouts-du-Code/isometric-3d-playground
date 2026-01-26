@@ -60,9 +60,6 @@ const OptionSelector = (props: IOptionSelectorProps) => {
   const [highColorPickerOpen, setHighColorPickerOpen] = useState(false);
   const [lowColorPickerOpen, setLowColorPickerOpen] = useState(false);
 
-  const [lowColor, setLowColor] = useState<string>(getLowColor());
-  const [highColor, setHighColor] = useState<string>(getHighColor());
-
   function openMenu() {
     setOpen(true);
   }
@@ -75,12 +72,6 @@ const OptionSelector = (props: IOptionSelectorProps) => {
   }
   function closeMenu() {
     setOpen(false);
-  }
-  function getHighColor(): string {
-    return props.highColor;
-  }
-  function getLowColor(): string {
-    return props.lowColor;
   }
 
   function onHighColorChangeComplete(color: ColorResult) {
