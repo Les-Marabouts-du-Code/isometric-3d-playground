@@ -94,18 +94,6 @@ const Visualizator = (props: IVisualizatorProps) => {
 
   return (
     <>
-      <div
-        style={{
-          position: 'absolute',
-          background: 'white',
-          width: '300px',
-          height: '100px',
-          fontSize: '10px',
-          padding: '10px'
-        }}
-      >
-        {JSON.stringify(gameContainerBounds)}
-      </div>
       {/* TEMP */}
       {props.imageData && game !== null && (
         <img
