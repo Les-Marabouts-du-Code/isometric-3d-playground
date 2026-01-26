@@ -15,7 +15,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import clsx from 'clsx';
 
 export interface IOptionSelectorProps {
-  onColorChange: (lowColor: string, highColor: string) => void;
+  lowColor: string;
+  onLowColorChange: (lowColor: string) => void;
+  highColor: string;
+  onHighColorChange: (lowColor: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -84,22 +87,22 @@ const OptionSelector = (props: IOptionSelectorProps) => {
   }
 
   function onHighColorChangeComplete(color: ColorResult) {
-    setHighColor(color.hex);
+    props.onHighColorChange(color.hex);
   }
 
   function onLowColorChangeComplete(color: ColorResult) {
-    setLowColor(color.hex);
+    props.onLowColorChange(color.hex);
   }
 
   // TODO: store 1 object containing both colors
   useEffect(() => {
     localStorage.setItem('isp_highColor', highColor);
-    props.onColorChange(lowColor, highColor);
+    props.onHighColorChange(highColor);
   }, [highColor]);
 
   useEffect(() => {
     localStorage.setItem('isp_lowColor', lowColor);
-    props.onColorChange(lowColor, highColor);
+    props.onLowColorChange(lowColor);
   }, [lowColor]);
 
   return (
@@ -128,7 +131,7 @@ const OptionSelector = (props: IOptionSelectorProps) => {
                 />
                 <ChromePicker
                   onChangeComplete={onHighColorChangeComplete}
-                  color={highColor}
+                  color={props.highColor}
                 />
               </div>
             ) : null}
@@ -146,7 +149,7 @@ const OptionSelector = (props: IOptionSelectorProps) => {
                 <div className={classes.cover} onClick={toggleLowColorPicker} />
                 <ChromePicker
                   onChangeComplete={onLowColorChangeComplete}
-                  color={lowColor}
+                  color={props.lowColor}
                 />
               </div>
             ) : null}
