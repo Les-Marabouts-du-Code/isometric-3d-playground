@@ -9,10 +9,10 @@ type UseMapColorsReturnProps = {
 
 export function useMapColors(): UseMapColorsReturnProps {
   const [lowColor, setLowColor] = useState<string>(
-    localStorage.getItem('isp_lowColor') ?? '#fff'
+    localStorage.getItem('isp_lowColor') ?? '#ffffff'
   );
   const [highColor, setHighColor] = useState<string>(
-    localStorage.getItem('isp_highColor') ?? '#fff'
+    localStorage.getItem('isp_highColor') ?? '#bada55'
   );
 
   useEffect(() => {
