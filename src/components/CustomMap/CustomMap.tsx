@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect
-} from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Map, MapProps } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -33,15 +29,15 @@ const CustomMap = React.forwardRef<Map, MapProps>((props, ref) => {
   }, [handleResize]);
 
   return (
-      <Map
-        {...props}
-        preferCanvas
-        style={{ width: '100%', height: `${mapHeight}px` }}
-        ref={ref}
-      >
-        {props.children}
-      </Map>
+    <Map
+      {...props}
+      preferCanvas
+      style={{ width: '100%', height: `${mapHeight}px` }}
+      ref={ref}
+    >
+      {props.children}
+    </Map>
   );
-})
+});
 
 export default CustomMap;

@@ -1,6 +1,11 @@
 import React, { RefObject, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { TileLayer, Rectangle as LeafletRectangle, PathProps, Map } from 'react-leaflet';
+import {
+  TileLayer,
+  Rectangle as LeafletRectangle,
+  PathProps,
+  Map
+} from 'react-leaflet';
 import {
   LatLngLiteral,
   LatLngBoundsExpression,
@@ -36,14 +41,14 @@ export type Props = {
   areas: IMapAreaFile[];
   onClickArea: (file: string) => void;
   onSelectArea?: (params: {
-    areaImageBase64: string,
+    areaImageBase64: string;
     areaCoordinates: {
-      latitude: number, 
-      longitude: number, 
-      width: number, 
-      height: number,
-      longitudeSteps: number
-    }
+      latitude: number;
+      longitude: number;
+      width: number;
+      height: number;
+      longitudeSteps: number;
+    };
   }) => void;
 };
 
@@ -103,12 +108,8 @@ const getMapArea = (
 };
 
 export default function MapMenu(props: Props) {
-  const {
-    isDrawing,
-    startDrawing,
-    stopDrawing,
-    rectangle
-  } = useDrawRectangle();
+  const { isDrawing, startDrawing, stopDrawing, rectangle } =
+    useDrawRectangle();
   // TEMP?
   const [selectArea, setSelectArea] = useState<any>();
   // TODO: should be more consistent to move it onto the parent
@@ -127,34 +128,34 @@ export default function MapMenu(props: Props) {
   // TODO: get this out of here (parent MapMenu)
   // TODO: get a screenshot of the selected area, add a callback in props
   const onRectangleDrawn = (area: IMapSelectableArea) => {
-    console.log(`onRectangleDrawn`)
+    console.log(`onRectangleDrawn`);
     const { lat, lng, width, height } = area;
-    console.log(`map.current?.leafletElement`, map)
+    console.log(`map.current?.leafletElement`, map);
     if (map.current?.leafletElement) {
       getImageFromMap({
-        map: map.current, 
-        rectangle: rectangle, 
-        maxImageSize: MAX_IMAGE_SIZE, 
+        map: map.current,
+        rectangle: rectangle,
+        maxImageSize: MAX_IMAGE_SIZE,
         onComplete: (params) => {
           // TODO: get this out of here
           localStorage.setItem('mapImage', params.imageBase64);
 
-          if(props.onSelectArea) {
+          if (props.onSelectArea) {
             props.onSelectArea({
               areaImageBase64: params.imageBase64,
               areaCoordinates: {
-                width: area.width, 
-                height: area.height, 
-                latitude: area.lat, 
-                longitude: area.lng, 
+                width: area.width,
+                height: area.height,
+                latitude: area.lat,
+                longitude: area.lng,
                 // FIXME: this param certainly shouldn't be here
                 longitudeSteps: params.imageSize.width
               }
-          })
-        }
+            });
+          }
 
-        // TODO: call callback to tell parent what to fetch
-        /*
+          // TODO: call callback to tell parent what to fetch
+          /*
         fetchAreaElevation({
           latitude: lat,
           longitude: lng,
@@ -174,7 +175,7 @@ export default function MapMenu(props: Props) {
           });
           */
         }
-      })
+      });
     }
   };
 
