@@ -1,143 +1,251 @@
 import Phaser from 'phaser';
 import { Cube } from '../objects/Cube';
 import Color from '../../../../lib/Isometric3DMap/utils/Color';
+import SpacePoint from '../../../../lib/Isometric3DMap/interfaces/spacePoint.interface';
 import MapDataToGrid from '../../../../lib/Isometric3DMap/mapdata/mapdatatogrid';
-import { IIsometric3DGridInputParams } from '../../../../lib/Isometric3DMap/isometric3dgrid';
+import { IMapGridPoint } from '../../../../lib/Isometric3DMap/interfaces/map-grid-point.interface';
+
+interface IMinMaxHeight {
+  minHeight: number;
+  maxHeight: number;
+}
 
 export class HeightMapScene extends Phaser.Scene {
-  // private fieldSize: number;
-  // private gameHeight: number;
-  // private gameWidth: number;
-  // private boardWidth: number;
-  // private boardHeight: number;
-  // private horizontalFields: number;
-  // private verticalFields: number;
-  // private tick: number;
   /**
    * Map Settings
    */
-  private map: any;
-  private params: any;
   private width = 50;
-  private minHeight = 0;
-  private maxHeight = 60;
   private size = 30;
-  private land: any[] = [];
-  private gridWidth = 100;
-  private gridHeight = 100;
+  private cubeGroup: Phaser.GameObjects.Group;
+  // TODO: using a container is some sort of hack: it allows to getBounds to resize image
+  private container: Phaser.GameObjects.Container | null = null;
   private centerX = window.innerWidth / 4;
-  private centerY = -100;
+  private centerY = window.innerHeight / 4;
+  private lastPointerCoordinates: { x: number; y: number } = { x: NaN, y: NaN };
 
   /**
    * Color Settings
    */
   private lowColor: Color;
   private highColor: Color;
+  private colorChanged: boolean = false;
+  private waterColor: Color = new Color(35, 72, 207);
 
-  private cubeList: any[] = [];
+  public mapData: SpacePoint[] = [];
+  public minHeight: number = 0;
+  public maxHeight: number = 0;
+  private mapDataJSON: any = {};
+  private imageBase64?: string;
 
-  private cursors: any;
-
-  constructor(inputParams: IIsometric3DGridInputParams) {
+  constructor({
+    data,
+    lowColor,
+    highColor,
+    imageBase64
+  }: {
+    data: JSON;
+    lowColor: string | null;
+    highColor: string | null;
+    imageBase64?: string;
+  }) {
     super({
       key: 'HeightMapScene'
     });
 
-    // this.params = inputParams.params;
-    this.lowColor = new Color(255, 255, 128);
-    this.highColor = new Color(179, 179, 255);
+    if (highColor) {
+      this.highColor = Color.fromHexa(highColor);
+    } else {
+      this.highColor = new Color(255, 255, 128);
+    }
+
+    if (lowColor) {
+      this.lowColor = Color.fromHexa(lowColor);
+    } else {
+      this.lowColor = new Color(179, 179, 255);
+    }
+
+    this.cubeGroup = new Phaser.GameObjects.Group(this);
+
+    this.mapDataJSON = data;
+    this.mapData = this.mapDataJSON.results;
+
+    this.imageBase64 = imageBase64;
   }
 
-  init(): void {
-    // this.fieldSize = 8;
-    // this.gameHeight = this.sys.canvas.height;
-    // this.gameWidth = this.sys.canvas.width;
-    // this.boardWidth = this.gameWidth - 2 * this.fieldSize;
-    // this.boardHeight = this.gameHeight - 2 * this.fieldSize;
-    // this.horizontalFields = this.boardWidth / this.fieldSize;
-    // this.verticalFields = this.boardHeight / this.fieldSize;
-    // this.tick = 0;
-    // this.map = {
-    //   data: new MapDataToGrid(this.params.data)
-    // };
-    this.cursors = this.input.keyboard.createCursorKeys();
+  private getMinMaxHeight(map: IMapGridPoint[]): IMinMaxHeight {
+    return map.reduce(
+      (prev: IMinMaxHeight, current: IMapGridPoint) => ({
+        minHeight: Math.min(prev.minHeight, current.height),
+        maxHeight: Math.max(prev.maxHeight, current.height)
+      }),
+      { minHeight: 0, maxHeight: 0 }
+    );
   }
 
   create(): void {
-    for (let y = 0; y < this.gridHeight; y++) {
-      let row = [];
-      for (let x = 0; x < this.gridWidth; x++) {
-        const depth = (this.width * 2) / 4;
-        const halfDepth = depth / 2;
-        const halfWidth = this.width / 2;
-        const height =
-          Math.random() * (this.maxHeight - this.minHeight) + this.minHeight;
-        const t = (height - this.minHeight) / (this.maxHeight - this.minHeight);
-        const color = this.lowColor.lerpTo(this.highColor, t);
-        // const cube = new Cube(
-        //   new Phaser.Geom.Point(
-        //     (x - y) * halfWidth * 1.02 + offsetX,
-        //     (x + y) * halfDepth * 1.02 + offsetY
-        //   ),
-        //   height,
-        //   width,
-        //   color,
-        //   this
-        // );
-        // this.cubeList.push(cube);
-        // this.add.isobox()
-
-        var tx = (x - y) * halfWidth * 0.5;
-        var ty = (x + y) * halfDepth * 0.5;
-
-        // var tile = this.add.isobox(
-        //   this.centerX + tx,
-        //   this.centerY + ty,
-        //   this.size,
-        //   height,
-        //   color.toHex(),
-        //   color.darken(30).toHex(),
-        //   color.darken(15).toHex()
-        // );
-        let cube = new Cube(
-          new Phaser.Geom.Point(this.centerX + tx, this.centerY + ty),
-          height,
-          this.size,
-          color,
-          this
-        );
-        this.add.existing(cube);
-        cube.setDepth(this.centerY + ty);
-        cube
-          .setInteractive()
-          .on(
-            'pointerdown',
-            (pointer: any, localX: number, localY: number, event: any) => {
-              console.log('click');
-            }
-          );
-        row.push(cube);
-      }
-      this.land.push(row);
+    let image: HTMLImageElement = new Image(),
+      context: CanvasRenderingContext2D | null;
+    if (this.imageBase64) {
+      image = new Image();
+      image.src = this.imageBase64;
+      const canvas = document.createElement('canvas');
+      context = canvas.getContext('2d');
+      context?.drawImage(image, 0, 0);
     }
+
+    function getPixel(x: number, y: number) {
+      return context?.getImageData(x, y, 1, 1).data;
+    }
+
+    const gridDataRaw = new MapDataToGrid(this.mapDataJSON.results);
+    // TODO: don't get flat grid, get grid, so you know how much cols & rows there are (and get tiles from image)
+    const gridData: IMapGridPoint[] = gridDataRaw.getFlatGrid().sort((a, b) => {
+      if (a.y < b.y) {
+        return -1;
+      } else if (a.y > b.y) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    const gridSize = gridDataRaw.getSize();
+    const { minHeight, maxHeight } = this.getMinMaxHeight(gridData);
+    this.minHeight = minHeight;
+    this.maxHeight = maxHeight;
+    const n = gridData.length;
+    let row: Cube[] = [];
+
+    // const container = this.add.container(this.centerX, this.centerY);
+    // const container = this.add.container(0, 0);
+    this.container = this.add.container(0, 0);
+
+    for (let i = 0; i < n; i++) {
+      const singleGridData = gridData[i];
+      const { x, y } = singleGridData;
+      const depth = (this.width * 2) / 4;
+      const halfDepth = depth / 2;
+      const halfWidth = this.width / 2;
+      const height = singleGridData.height;
+      const t = (height - this.minHeight) / (this.maxHeight - this.minHeight);
+
+      let color: Color;
+      if (height === 0) {
+        color = this.waterColor;
+      } else {
+        color = this.lowColor.lerpTo(this.highColor, t);
+      }
+
+      var tx = (x - y) * halfWidth * 0.6;
+      var ty = (x + y) * halfDepth * 0.6;
+
+      let cube = new Cube(
+        new Phaser.Geom.Point(this.centerX + tx, this.centerY + ty),
+        0,
+        this.size,
+        color,
+        this
+      );
+
+      // cube.setDepth(this.centerY + ty);
+      row.push(cube);
+      this.cubeGroup.add(cube);
+      // this.add.existing(cube);
+      // const box = this.add.isobox(tx, ty, this.size, height)
+      // FIXME
+      // container.addAt(cube, this.centerY + ty);
+      //container.add(cube);
+
+      // NOTE: color + height tween
+      const reverseIndex = n - 1 - i;
+      this.tweens.add({
+        targets: cube,
+        height: singleGridData.height,
+        ease: 'Sine.easeOut',
+        duration: 1500 + 10 * reverseIndex,
+        delay: reverseIndex * 2,
+        onUpdate: (args) => {
+          const animationProgress = args.elapsed / args.duration;
+          this.updateCubeColor(cube, this.lowColor, color, animationProgress);
+        }
+      });
+    }
+
+    // container.add(row);
+    this.cubeGroup.children.each((cube) => {
+      //container.addAt(cube, this.centerY + asCube.y);
+      if (this.container !== null) {
+        this.container.add(cube as Cube);
+      }
+    });
+
+    this.input.on('pointermove', (o_pointer: Phaser.Input.Pointer) => {
+      if (!o_pointer.primaryDown) {
+        return;
+      }
+
+      if (
+        !isNaN(this.lastPointerCoordinates.x) &&
+        !isNaN(this.lastPointerCoordinates.y)
+      ) {
+        this.cameras.main.scrollX -=
+          o_pointer.position.x - this.lastPointerCoordinates.x;
+        this.cameras.main.scrollY -=
+          o_pointer.position.y - this.lastPointerCoordinates.y;
+      }
+
+      const { tagName }: { tagName: string } =
+        o_pointer.manager.activePointer.downElement;
+
+      if (tagName.match(/^canvas$/i)) {
+        this.lastPointerCoordinates.x = o_pointer.position.x;
+        this.lastPointerCoordinates.y = o_pointer.position.y;
+      }
+    });
+
+    this.input.on('pointerup', (o_pointer: Phaser.Input.Pointer) => {
+      this.lastPointerCoordinates.x = NaN;
+      this.lastPointerCoordinates.y = NaN;
+    });
   }
 
-  move_camera_by_pointer(o_pointer: Phaser.Input.Pointer) {
-    if (!o_pointer.upTime) {
+  getContainerBounds() {
+    return this.container ? this.container.getBounds() : null;
+  }
+
+  handleColorChange(lowColor: string, highColor: string) {
+    this.colorChanged = true;
+    this.lowColor = Color.fromHexa(lowColor);
+    this.highColor = Color.fromHexa(highColor);
+  }
+
+  updateCubeColor(
+    cube: Cube,
+    startColor: Color,
+    endColor: Color,
+    rate: number
+  ) {
+    if (rate >= 1) {
       return;
     }
-    if (o_pointer.isDown) {
-      if (this.cameras.main) {
-        this.cameras.main.x += this.cameras.main.x - o_pointer.position.x;
-        this.cameras.main.y += this.cameras.main.y - o_pointer.position.y;
-      }
-      // this.o_mcamera = o_pointer.position.clone();
-    }
-    if (o_pointer.primaryDown) {
-      // this.o_mcamera = null;
-    }
+    const newColor = startColor.lerpTo(endColor, rate);
+    cube.colorize(newColor);
   }
+
+  private updateColor() {
+    this.cubeGroup.children.iterate((child) => {
+      const cube: Cube = child as Cube;
+      const delta =
+        (cube.height - this.minHeight) / (this.maxHeight - this.minHeight);
+      const color = this.lowColor.lerpTo(this.highColor, delta);
+      cube.colorize(color);
+    });
+  }
+
   update(time: number): void {
-    // console.log(time);
+    if (this.colorChanged) {
+      this.updateColor();
+      this.colorChanged = false;
+    }
   }
 }

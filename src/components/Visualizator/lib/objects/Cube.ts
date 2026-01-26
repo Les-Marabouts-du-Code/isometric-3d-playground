@@ -6,7 +6,15 @@ export class Cube extends Phaser.GameObjects.IsoBox {
   public width: number;
   public height: number;
 
-  private color: Color;
+  private _color: Color = new Color();
+
+  get color(): Color {
+    return this._color;
+  }
+  set color(color: Color) {
+    this._color = color;
+    this.colorize(color);
+  }
 
   constructor(
     _position: Phaser.Geom.Point,
@@ -28,9 +36,9 @@ export class Cube extends Phaser.GameObjects.IsoBox {
 
   public colorize(color: Color) {
     this.setFillStyle(
-      this.color.toHex(),
-      this.color.darken(30).toHex(),
-      this.color.darken(15).toHex()
+      color.toHex(),
+      color.darken(30).toHex(),
+      color.darken(15).toHex()
     );
   }
 }

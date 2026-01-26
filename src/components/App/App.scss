@@ -3,7 +3,8 @@ $color2: #202020;
 
 /** GENERAL **/
 body,
-html {
+html,
+#root {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -14,6 +15,10 @@ body {
   background: $color1;
   position: relative;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#root {
+  display: flex;
 }
 
 /** Canvas **/

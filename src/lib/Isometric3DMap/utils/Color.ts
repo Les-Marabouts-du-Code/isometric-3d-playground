@@ -26,6 +26,16 @@ export default class Color {
     this.loadHSL();
   }
 
+  public static fromHexa(hexa: string) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexa);
+    return result
+      ? new Color(
+          parseInt(result[1], 16),
+          parseInt(result[2], 16),
+          parseInt(result[3], 16)
+        )
+      : new Color();
+  }
   private loadHSL() {
     let r: number = this.r / 255;
     let g: number = this.g / 255;
@@ -94,10 +104,6 @@ export default class Color {
   }
 
   static RGBtoHexa(color: Color) {}
-
-  static hexaToRGB(hex: string) {
-    return new Color();
-  }
 
   public toHex() {
     return (this.r << 16) + (this.g << 8) + (this.b | 0);
