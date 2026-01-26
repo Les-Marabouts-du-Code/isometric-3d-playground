@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type UseMapColorsReturnProps = {
   lowColor: string;
@@ -14,6 +14,14 @@ export function useMapColors(): UseMapColorsReturnProps {
   const [highColor, setHighColor] = useState<string>(
     localStorage.getItem('isp_highColor') ?? '#fff'
   );
+
+  useEffect(() => {
+    localStorage.setItem('isp_lowColor', lowColor);
+  }, [lowColor]);
+
+  useEffect(() => {
+    localStorage.setItem('isp_highColor', highColor);
+  }, [highColor]);
 
   return {
     lowColor,

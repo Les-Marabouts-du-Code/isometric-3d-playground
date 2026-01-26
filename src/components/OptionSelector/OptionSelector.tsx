@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ChromePicker,
-  ColorResult,
-} from 'react-color';
+import React, { useState } from 'react';
+import { ChromePicker, ColorResult } from 'react-color';
 import {
   Paper,
   makeStyles,
   Button,
   ButtonBase,
   Typography,
-  IconButton,
+  IconButton
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import clsx from 'clsx';
@@ -93,17 +90,6 @@ const OptionSelector = (props: IOptionSelectorProps) => {
   function onLowColorChangeComplete(color: ColorResult) {
     props.onLowColorChange(color.hex);
   }
-
-  // TODO: store 1 object containing both colors
-  useEffect(() => {
-    localStorage.setItem('isp_highColor', highColor);
-    props.onHighColorChange(highColor);
-  }, [highColor]);
-
-  useEffect(() => {
-    localStorage.setItem('isp_lowColor', lowColor);
-    props.onLowColorChange(lowColor);
-  }, [lowColor]);
 
   return (
     <Paper
