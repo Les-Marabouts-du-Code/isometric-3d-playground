@@ -86,11 +86,11 @@ const Visualizator = (props: IVisualizatorProps) => {
     }
   }, [game]);
 
-  function handleColorChange(lowColor: string, highColor: string) {
+  useEffect(() => {
     if (game) {
       game.colorChanged(lowColor, highColor);
     }
-  }
+  }, [game, lowColor, highColor]);
 
   return (
     <>
