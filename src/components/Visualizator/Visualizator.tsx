@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import IsoGame from './lib/IsoGame';
 import { HeightMapScene } from './lib/scenes/heightMapScene';
 import OptionSelector from '../OptionSelector/OptionSelector';
+import { useMapColors } from '../../hooks';
 
 interface IVisualizatorProps {
   mapData: JSON;
@@ -20,6 +21,9 @@ const Visualizator = (props: IVisualizatorProps) => {
 
   const localHighColor = localStorage.getItem('isp_highColor');
   const localLowColor = localStorage.getItem('isp_lowColor');
+
+  const { lowColor, highColor, setLowColor, setHighColor } = useMapColors();
+
   const [game, setGame] = useState<IsoGame>();
   // FIXME
   const [gameContainerBounds, setGameContainerBounds] = useState<any>({
@@ -32,8 +36,8 @@ const Visualizator = (props: IVisualizatorProps) => {
   const scene = new HeightMapScene({
     data: props.mapData,
     imageBase64: props.imageData,
-    lowColor: localLowColor,
-    highColor: localHighColor
+    lowColor,
+    highColor
   });
 
   useEffect(() => {
@@ -129,7 +133,14 @@ const Visualizator = (props: IVisualizatorProps) => {
         />
       )} */}
       <div id="display-el"></div>
-      {game && <OptionSelector onColorChange={handleColorChange} />}
+      {game && (
+        <OptionSelector
+          lowColor={lowColor}
+          highColor={highColor}
+          onLowColorChange={setLowColor}
+          onHighColorChange={setHighColor}
+        />
+      )}
     </>
   );
 };
