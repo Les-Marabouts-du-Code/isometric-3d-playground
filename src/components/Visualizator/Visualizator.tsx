@@ -19,7 +19,10 @@ const Visualizator = (props: IVisualizatorProps) => {
   const [width, setWidth] = useState(getWindowWidth());
   const [height, setHeight] = useState(getWindowHeight());
 
-  const { lowColor, highColor, setLowColor, setHighColor } = useMapColors();
+  const { lowColor, highColor, setLowColor, setHighColor } = useMapColors({
+    defaultLowColor: '#ffffff',
+    defaultHighColor: '#bada55'
+  });
 
   const [game, setGame] = useState<IsoGame>();
   // FIXME
