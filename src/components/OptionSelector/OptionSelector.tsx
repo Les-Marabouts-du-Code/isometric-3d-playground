@@ -80,10 +80,10 @@ const OptionSelector = (props: IOptionSelectorProps) => {
     setOpen(false);
   }
   function getHighColor(): string {
-    return localStorage.getItem('isp_highColor') || '#fff';
+    return props.highColor;
   }
   function getLowColor(): string {
-    return localStorage.getItem('isp_lowColor') || '#fff';
+    return props.lowColor;
   }
 
   function onHighColorChangeComplete(color: ColorResult) {

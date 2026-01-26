@@ -19,9 +19,6 @@ const Visualizator = (props: IVisualizatorProps) => {
   const [width, setWidth] = useState(getWindowWidth());
   const [height, setHeight] = useState(getWindowHeight());
 
-  const localHighColor = localStorage.getItem('isp_highColor');
-  const localLowColor = localStorage.getItem('isp_lowColor');
-
   const { lowColor, highColor, setLowColor, setHighColor } = useMapColors();
 
   const [game, setGame] = useState<IsoGame>();
