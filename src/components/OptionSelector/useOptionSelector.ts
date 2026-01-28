@@ -1,23 +1,18 @@
 import { useEffect, useState } from 'react';
 
+import { IOptionSelectorProps } from './OptionSelector';
+
 const LOW_COLOR_KEY = 'isp_lowColor';
 const HIGH_COLOR_KEY = 'isp_highColor';
 
-type UseMapColorsProps = {
+type UseOptionSelectorProps = {
   defaultLowColor: string;
   defaultHighColor: string;
 };
 
-type UseMapColorsReturnProps = {
-  lowColor: string;
-  highColor: string;
-  setLowColor: (lowColor: string) => void;
-  setHighColor: (highColor: string) => void;
-};
-
-export function useMapColors(
-  props: UseMapColorsProps
-): UseMapColorsReturnProps {
+export function useOptionSelector(
+  props: UseOptionSelectorProps
+): IOptionSelectorProps {
   const [lowColor, setLowColor] = useState<string>(
     localStorage.getItem(LOW_COLOR_KEY) ?? props.defaultLowColor
   );
@@ -36,7 +31,7 @@ export function useMapColors(
   return {
     lowColor,
     highColor,
-    setLowColor,
-    setHighColor
+    onLowColorChange: setLowColor,
+    onHighColorChange: setHighColor
   };
 }
