@@ -28,10 +28,16 @@ export function useOptionSelector(
     localStorage.setItem(HIGH_COLOR_KEY, highColor);
   }, [highColor]);
 
+  function onResetColors() {
+    setLowColor(props.defaultLowColor);
+    setHighColor(props.defaultHighColor);
+  }
+
   return {
     lowColor,
     highColor,
     onLowColorChange: setLowColor,
-    onHighColorChange: setHighColor
+    onHighColorChange: setHighColor,
+    onResetColors
   };
 }
