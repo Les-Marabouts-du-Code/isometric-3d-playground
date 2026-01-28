@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import IsoGame from './lib/IsoGame';
 import { HeightMapScene } from './lib/scenes/heightMapScene';
 import OptionSelector from '../OptionSelector/OptionSelector';
-import { useMapColors } from '../../hooks';
+import { useOptionSelector } from '../OptionSelector/useOptionSelector';
 
 interface IVisualizatorProps {
   mapData: JSON;
@@ -19,10 +19,11 @@ const Visualizator = (props: IVisualizatorProps) => {
   const [width, setWidth] = useState(getWindowWidth());
   const [height, setHeight] = useState(getWindowHeight());
 
-  const { lowColor, highColor, setLowColor, setHighColor } = useMapColors({
-    defaultLowColor: '#ffffff',
-    defaultHighColor: '#bada55'
-  });
+  const { lowColor, highColor, onLowColorChange, onHighColorChange } =
+    useOptionSelector({
+      defaultLowColor: '#ffffff',
+      defaultHighColor: '#bada55'
+    });
 
   const [game, setGame] = useState<IsoGame>();
   // FIXME
@@ -125,8 +126,8 @@ const Visualizator = (props: IVisualizatorProps) => {
         <OptionSelector
           lowColor={lowColor}
           highColor={highColor}
-          onLowColorChange={setLowColor}
-          onHighColorChange={setHighColor}
+          onLowColorChange={onLowColorChange}
+          onHighColorChange={onHighColorChange}
         />
       )}
     </>
