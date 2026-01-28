@@ -16,6 +16,7 @@ export interface IOptionSelectorProps {
   onLowColorChange: (lowColor: string) => void;
   highColor: string;
   onHighColorChange: (lowColor: string) => void;
+  onResetColors?: () => void;
 }
 
 const useStyles = makeStyles({
@@ -131,6 +132,9 @@ const OptionSelector = (props: IOptionSelectorProps) => {
               </div>
             ) : null}
           </>
+          {props.onResetColors && (
+            <Button onClick={props.onResetColors}>🗑</Button>
+          )}
           <IconButton
             aria-label="delete"
             onClick={(event) => {
