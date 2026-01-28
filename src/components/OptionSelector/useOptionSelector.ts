@@ -10,15 +10,32 @@ type UseOptionSelectorProps = {
   defaultHighColor: string;
 };
 
+type State = {
+  lowColor: string;
+  highColor: string;
+};
+
 export function useOptionSelector(
   props: UseOptionSelectorProps
 ): IOptionSelectorProps {
-  const [lowColor, setLowColor] = useState<string>(
-    localStorage.getItem(LOW_COLOR_KEY) ?? props.defaultLowColor
-  );
-  const [highColor, setHighColor] = useState<string>(
-    localStorage.getItem(HIGH_COLOR_KEY) ?? props.defaultHighColor
-  );
+  const [{ lowColor, highColor }, setState] = useState<State>({
+    lowColor: localStorage.getItem(LOW_COLOR_KEY) ?? props.defaultLowColor,
+    highColor: localStorage.getItem(HIGH_COLOR_KEY) ?? props.defaultHighColor
+  });
+
+  function onLowColorChange(color: string) {
+    setState((prevState) => ({
+      ...prevState,
+      lowColor: color
+    }));
+  }
+
+  function onHighColorChange(color: string) {
+    setState((prevState) => ({
+      ...prevState,
+      highColor: color
+    }));
+  }
 
   useEffect(() => {
     localStorage.setItem(LOW_COLOR_KEY, lowColor);
@@ -29,15 +46,17 @@ export function useOptionSelector(
   }, [highColor]);
 
   function onResetColors() {
-    setLowColor(props.defaultLowColor);
-    setHighColor(props.defaultHighColor);
+    setState({
+      lowColor: props.defaultLowColor,
+      highColor: props.defaultHighColor
+    });
   }
 
   return {
     lowColor,
     highColor,
-    onLowColorChange: setLowColor,
-    onHighColorChange: setHighColor,
+    onLowColorChange,
+    onHighColorChange,
     onResetColors
   };
 }
