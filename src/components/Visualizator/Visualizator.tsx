@@ -19,11 +19,16 @@ const Visualizator = (props: IVisualizatorProps) => {
   const [width, setWidth] = useState(getWindowWidth());
   const [height, setHeight] = useState(getWindowHeight());
 
-  const { lowColor, highColor, onLowColorChange, onHighColorChange } =
-    useOptionSelector({
-      defaultLowColor: '#ffffff',
-      defaultHighColor: '#bada55'
-    });
+  const {
+    lowColor,
+    highColor,
+    onLowColorChange,
+    onHighColorChange,
+    onResetColors
+  } = useOptionSelector({
+    defaultLowColor: '#ffffff',
+    defaultHighColor: '#bada55'
+  });
 
   const [game, setGame] = useState<IsoGame>();
   // FIXME
@@ -128,6 +133,7 @@ const Visualizator = (props: IVisualizatorProps) => {
           highColor={highColor}
           onLowColorChange={onLowColorChange}
           onHighColorChange={onHighColorChange}
+          onResetColors={onResetColors}
         />
       )}
     </>
