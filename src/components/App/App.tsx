@@ -25,9 +25,7 @@ const ROUTES = {
   ISOMETRIC: '/isometric'
 };
 
-type Props = {};
-
-export default function App(props: Props) {
+const App: React.FunctionComponent<never> = () => {
   const [mapData, setMapData] = useState<JSON>();
   const history = useHistory();
 
@@ -36,7 +34,9 @@ export default function App(props: Props) {
     loadJSON.load(onLoadComplete, onLoadError);
   };
 
-  const onLoadError = (message: string) => {};
+  const onLoadError = (message: string) => {
+    // TODO
+  };
 
   const onLoadComplete = (data: JSON) => {
     setMapData((prev) => {
@@ -98,7 +98,7 @@ export default function App(props: Props) {
       </Route>
     </>
   );
-}
+};
 
 const IfVisualizator = (props: { data?: JSON }) => {
   // TEMP
@@ -118,3 +118,5 @@ const IfVisualizator = (props: { data?: JSON }) => {
     return null;
   }
 };
+
+export default App;

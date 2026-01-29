@@ -136,8 +136,8 @@ export class HeightMapScene extends Phaser.Scene {
         color = this.lowColor.lerpTo(this.highColor, t);
       }
 
-      var tx = (x - y) * halfWidth * 0.6;
-      var ty = (x + y) * halfDepth * 0.6;
+      const tx = (x - y) * halfWidth * 0.6;
+      const ty = (x + y) * halfDepth * 0.6;
 
       let cube = new Cube(
         new Phaser.Geom.Point(this.centerX + tx, this.centerY + ty),

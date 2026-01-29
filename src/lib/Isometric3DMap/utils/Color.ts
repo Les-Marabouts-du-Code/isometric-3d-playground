@@ -103,8 +103,6 @@ export default class Color {
     this.b = b * 255;
   }
 
-  static RGBtoHexa(color: Color) {}
-
   public toHex() {
     return (this.r << 16) + (this.g << 8) + (this.b | 0);
   }
@@ -148,7 +146,7 @@ export default class Color {
   }
 
   private componentToHex(c: number) {
-    var hex = c.toString(16).slice(-2);
+    const hex = c.toString(16).slice(-2);
     return hex.length === 1 ? '0' + hex : hex;
   }
 
