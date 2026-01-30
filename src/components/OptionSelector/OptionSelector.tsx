@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { ChromePicker, ColorResult } from 'react-color';
 import {
   Paper,
-  makeStyles,
   Button,
   ButtonBase,
   Typography,
-  IconButton
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import clsx from 'clsx';
+  IconButton,
+  styled
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface IOptionSelectorProps {
   lowColor: string;
@@ -19,44 +18,51 @@ export interface IOptionSelectorProps {
   onResetColors?: () => void;
 }
 
-const useStyles = makeStyles({
-  optionSelector: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10,
-    background: '#fff',
-    transition: 'width .2s ease-in-out, height .2s ease-in-out',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  optionSelectorClosed: {
-    width: 60,
-    height: 32
-  },
-  optionSelectorOpen: {
+const PREFIX = 'OptionSelector';
+
+const classes = {
+  closed: `${PREFIX}-closed`,
+  open: `${PREFIX}-open`
+};
+
+const RootPaper = styled(Paper)(() => ({
+  position: 'absolute',
+  right: 10,
+  bottom: 10,
+  background: '#fff',
+  transition: 'width .2s ease-in-out, height .2s ease-in-out',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  [`&.${classes.open}`]: {
     width: 470
   },
-  menuButton: {
-    flex: 1
-  },
-  popOver: {
-    position: 'absolute',
-    zIndex: 2,
-    bottom: 60
-  },
-  cover: {
-    position: 'fixed',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0
+  [`&.${classes.closed}`]: {
+    width: 60,
+    height: 32
   }
-});
+}));
+
+const MenuButton = styled(ButtonBase)(() => ({
+  flex: 1
+}));
+
+const PopOver = styled('div')(() => ({
+  position: 'absolute',
+  zIndex: 2,
+  bottom: 60
+}));
+
+const Cover = styled('div')(() => ({
+  position: 'fixed',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0
+}));
 
 const OptionSelector = (props: IOptionSelectorProps) => {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [highColorPickerOpen, setHighColorPickerOpen] = useState(false);
   const [lowColorPickerOpen, setLowColorPickerOpen] = useState(false);
@@ -84,13 +90,7 @@ const OptionSelector = (props: IOptionSelectorProps) => {
   }
 
   return (
-    <Paper
-      className={clsx(
-        classes.optionSelector,
-        open && classes.optionSelectorOpen,
-        !open && classes.optionSelectorClosed
-      )}
-    >
+    <RootPaper className={open ? classes.open : classes.closed}>
       {open ? (
         <>
           <>
@@ -102,16 +102,13 @@ const OptionSelector = (props: IOptionSelectorProps) => {
               Couleur Haute
             </Button>
             {highColorPickerOpen ? (
-              <div className={classes.popOver}>
-                <div
-                  className={classes.cover}
-                  onClick={toggleHighColorPicker}
-                />
+              <PopOver>
+                <Cover onClick={toggleHighColorPicker} />
                 <ChromePicker
                   onChangeComplete={onHighColorChangeComplete}
                   color={props.highColor}
                 />
-              </div>
+              </PopOver>
             ) : null}
           </>
           <>
@@ -123,13 +120,13 @@ const OptionSelector = (props: IOptionSelectorProps) => {
               Couleur Basse
             </Button>
             {lowColorPickerOpen ? (
-              <div className={classes.popOver}>
-                <div className={classes.cover} onClick={toggleLowColorPicker} />
+              <PopOver>
+                <Cover onClick={toggleLowColorPicker} />
                 <ChromePicker
                   onChangeComplete={onLowColorChangeComplete}
                   color={props.lowColor}
                 />
-              </div>
+              </PopOver>
             ) : null}
           </>
           {props.onResetColors && (
@@ -145,19 +142,17 @@ const OptionSelector = (props: IOptionSelectorProps) => {
           </IconButton>
         </>
       ) : (
-        <ButtonBase
+        <MenuButton
           focusRipple
-          // className={classes.optionSelectorClosed}
           disableRipple={open}
-          onClick={(event) => {
+          onClick={() => {
             openMenu();
           }}
-          className={classes.menuButton}
         >
           <Typography>Menu</Typography>
-        </ButtonBase>
+        </MenuButton>
       )}
-    </Paper>
+    </RootPaper>
   );
 };
 export default OptionSelector;

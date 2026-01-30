@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.scss';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Link, Redirect, Route, useHistory } from 'react-router-dom';
 import Visualizator from '../Visualizator/Visualizator';
 import MapMenu, { Props as MapMenuProps } from '../MapMenu/MapMenu';

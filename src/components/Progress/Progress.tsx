@@ -1,6 +1,6 @@
 import React from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { withStyles } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
+import { withStyles } from 'tss-react/mui';
 import './Progress.scss';
 
 type Props = {
@@ -8,12 +8,12 @@ type Props = {
 };
 
 export default function Progress(props: Props) {
-  const ColorCircularProgress = withStyles({
+  const ColorCircularProgress = withStyles(CircularProgress, {
     root: {
       color: props.color || '#000',
       backgroundColor: 'none'
     }
-  })(CircularProgress);
+  });
 
   return (
     <div className="loader-container">
