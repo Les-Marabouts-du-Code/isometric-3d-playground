@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   TileLayer,
@@ -116,7 +116,7 @@ export default function MapMenu(props: Props) {
   const history = useHistory();
   const { zoom: initialZoom, ...initialPosition } = getMapInitialSettings();
 
-  const map: RefObject<Map> = useRef(null);
+  const map = useRef<Map | null>(null);
 
   const pathProps: PathProps = {
     fillColor: '#ffffff',

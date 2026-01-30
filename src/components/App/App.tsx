@@ -25,7 +25,7 @@ const ROUTES = {
   ISOMETRIC: '/isometric'
 };
 
-const App: React.FunctionComponent<never> = () => {
+const App: React.FunctionComponent = () => {
   const [mapData, setMapData] = useState<JSON>();
   const history = useHistory();
 
