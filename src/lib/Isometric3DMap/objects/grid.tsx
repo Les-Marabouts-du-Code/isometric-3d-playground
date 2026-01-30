@@ -1,5 +1,6 @@
 import { TweenLite } from 'gsap';
 import { Expo } from 'gsap';
+import PIXI from 'pixi.js';
 
 import { gridToAbsolute, absoluteToGrid } from '../display/pointconverter';
 import Square from './square';
@@ -7,8 +8,6 @@ import { DisplayManager } from '../display/displaymanager';
 import { IGridPoint } from '../interfaces/grid-point.interface';
 import { GridDisplayObject } from './grid-display-object';
 import Color from '../utils/Color';
-
-const PIXI = require('pixi.js');
 
 // grid cell's half width
 const GRID_UNIT = 40;
@@ -63,7 +62,7 @@ class Grid {
 
   drawAll() {
     const gridDisplayObjects: GridDisplayObject[] = this.gridObjects.map(
-      gridObject => gridObject.getGraphics()
+      (gridObject) => gridObject.getGraphics()
     );
     this.displayManager.addObjectListToGrid(gridDisplayObjects);
   }
@@ -85,7 +84,7 @@ class Grid {
     const gridCoordinates = absoluteToGrid(point);
     const { x, y, z } = gridCoordinates;
     let returnObject;
-    this.gridObjects.forEach(object => {
+    this.gridObjects.forEach((object) => {
       const graphics = object.getGraphics();
       if (
         x === graphics.gridX &&

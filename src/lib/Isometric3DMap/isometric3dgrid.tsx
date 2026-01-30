@@ -1,8 +1,8 @@
+import PIXI from 'pixi.js';
 import Color from './utils/Color';
 import Grid from './objects/grid';
 import Square from './objects/square';
-const PIXI = require('pixi.js');
-const MapDataToGrid = require('./mapdata/mapdatatogrid').default;
+import MapDataToGrid from './mapdata/mapdatatogrid';
 
 export interface IIsometric3DGridInputParams {
   app: PIXI.Application;
@@ -58,7 +58,7 @@ class Isometric3DGrid {
     this.grid = new Grid(this.app, this.container);
     this.killCallback = () => null;
     // ticker
-    this.ticker = PIXI.ticker.shared;
+    this.ticker = PIXI.Ticker.shared;
     this.ticker.autoStart = false;
     this.ticker.minFPS = 1;
     this.ticker.maxFPS = 100;
@@ -98,6 +98,7 @@ class Isometric3DGrid {
   }
 
   initMouseListeners() {
+    // eslint-disable-next-line
     const _this = this;
     let lastMouseX: number, lastMouseY: number;
 

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Container, DisplayObject } from 'pixi.js';
 import { GridDisplayObject } from '../objects/grid-display-object';
 
@@ -15,7 +16,7 @@ export class DisplayManager {
 
   addObjectListToGrid(objectList: GridDisplayObject[]) {
     const sortedObjects = this.sortObjects(objectList);
-    sortedObjects.forEach(object => {
+    sortedObjects.forEach((object) => {
       this.container.addChild(object);
     });
   }
@@ -36,7 +37,8 @@ export class DisplayManager {
    * @param {PIXI.Container} container
    */
   private orderObjects(container: Container) {
-    const children: GridDisplayObject[] = container.children as GridDisplayObject[];
+    const children: GridDisplayObject[] =
+      container.children as GridDisplayObject[];
     const sortedChildren = this.sortObjects(children);
 
     const childrenCount = sortedChildren.length;
