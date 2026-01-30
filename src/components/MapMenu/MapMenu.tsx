@@ -1,5 +1,4 @@
-import React, { RefObject, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
 import {
   TileLayer,
   Rectangle as LeafletRectangle,
@@ -112,11 +111,9 @@ export default function MapMenu(props: Props) {
     useDrawRectangle();
   // TEMP?
   const [selectArea, setSelectArea] = useState<any>();
-  // TODO: should be more consistent to move it onto the parent
-  const history = useHistory();
   const { zoom: initialZoom, ...initialPosition } = getMapInitialSettings();
 
-  const map: RefObject<Map> = useRef(null);
+  const map = useRef<Map | null>(null);
 
   const pathProps: PathProps = {
     fillColor: '#ffffff',
@@ -129,7 +126,6 @@ export default function MapMenu(props: Props) {
   // TODO: get a screenshot of the selected area, add a callback in props
   const onRectangleDrawn = (area: IMapSelectableArea) => {
     console.log(`onRectangleDrawn`);
-    const { lat, lng, width, height } = area;
     console.log(`map.current?.leafletElement`, map);
     if (map.current?.leafletElement) {
       getImageFromMap({

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { isMobile } from 'mobile-device-detect';
+import PIXI from 'pixi.js';
 import Visualizator from '../Visualizator/Visualizator';
-const Isometric3DGrid = require('../../lib/Isometric3DMap/isometric3dgrid')
-  .default;
-const PIXI = require('pixi.js');
+import Isometric3DGrid from '../../lib/Isometric3DMap/isometric3dgrid';
 
 let app, isometric3DGrid;
 
-const CanvasContainer2 = props => {
+const CanvasContainer2 = (props) => {
   return <Visualizator />;
 };
 export default class CanvasContainer extends Component {

@@ -37,13 +37,13 @@ const initState: State = {
   isDrawing: false
 };
 
-const reducer = (prevState: State, action: Action): State => {
+const reducer: Reducer<State, Action> = (prevState, action) => {
   switch (action.type) {
     case 'startDrawing':
       return {
         ...prevState,
         x: action.x,
-        y: action.y, 
+        y: action.y,
         isDrawing: true
       };
     case 'draw':
@@ -63,9 +63,10 @@ const reducer = (prevState: State, action: Action): State => {
 };
 
 export const useDrawRectangle = (): UseDrawRectangleState => {
-  const [{ x, y, width, height, isDrawing }, dispatch] = useReducer<
-    Reducer<State, Action>
-  >(reducer, initState);
+  const [{ x, y, width, height, isDrawing }, dispatch] = useReducer(
+    reducer,
+    initState
+  );
 
   const handleMouseMove = (event: MouseEvent) => {
     const rectangleWidth = event.clientX - x;
@@ -107,7 +108,7 @@ export const useDrawRectangle = (): UseDrawRectangleState => {
       y,
       width,
       height
-    }, 
+    },
     isDrawing
   };
 };
