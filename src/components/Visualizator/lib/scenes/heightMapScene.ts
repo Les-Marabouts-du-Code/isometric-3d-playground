@@ -176,7 +176,9 @@ export class HeightMapScene extends Phaser.Scene {
       //container.addAt(cube, this.centerY + asCube.y);
       if (this.container !== null) {
         this.container.add(cube as Cube);
+        return true;
       }
+      return null;
     });
 
     this.input.on('pointermove', (o_pointer: Phaser.Input.Pointer) => {
@@ -239,6 +241,8 @@ export class HeightMapScene extends Phaser.Scene {
         (cube.height - this.minHeight) / (this.maxHeight - this.minHeight);
       const color = this.lowColor.lerpTo(this.highColor, delta);
       cube.colorize(color);
+
+      return true;
     });
   }
 
